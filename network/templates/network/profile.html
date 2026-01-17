@@ -1,0 +1,44 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+<h2>{{ profile_user.username }}</h2>
+<p>Followers: {{ profile.followers.count }}</p>
+<p>Following: {{ profile_user.following.count }}</p>
+
+
+{% if user.is_authenticated and user != profile.user %}
+    <form action="{% url 'toggle_follow' profile_user.username %}" method="post">
+        {% csrf_token %}
+        {% if is_following %}
+            <button class="btn btn-danger">Unfollow</button>
+        {% else %}
+            <button class="btn btn-primary">Follow</button>
+        {% endif %}
+
+    </form>
+
+{% endif %}
+
+<hr>
+<h3>My Posts</h3>
+<div id="posts-container">
+{% for post in profile_posts %}
+    <div class="card mb-3" id="post-{{ post.id }}">
+        <div class="card-body">
+            <a href="#" class="edit-link"  data-post-id = "{{ post.id }}">Edit</a>
+            <p class="post-content">{{ post.content }}</p>
+            <small class="text-muted">{{ post.timestamp }}</small>
+        </div>
+    </div>
+    
+
+{% endfor %}
+</div>
+
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'network/posts.js' %}" defer></script>
+{% endblock %}

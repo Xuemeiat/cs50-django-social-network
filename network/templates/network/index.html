@@ -1,0 +1,63 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    {% if user.is_authenticated %}
+    <div class="newpostform">
+        
+        <form action="{% url 'new_post' %}" method="post">
+            {% csrf_token %}
+            <textarea name="content" class="form-control" placeholder="What's on your mind?" rows="4"></textarea>
+            <br>
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <h2>All posts</h2>
+<div id="posts-container">
+    {% for post in page_obj %}
+    <div class="card mb-3" id="post-{{ post.id }}">
+        <div class="card-body">
+           <a href="{% url 'profile_page' post.user.username %}"> <strong>{{post.user.username}}</strong>
+            </a>
+            <br>
+            {% if user.is_authenticated and post.user == user %}
+                <a href="#" class="edit-link"  data-post-id = "{{ post.id }}">Edit</a>
+            {% endif %}
+            <br>
+            <div class="post-content">{{post.content}}</div><br>
+            <small class="text-muted">
+            {{post.timestamp}}</small><br>
+            {% include "posts/like_posts.html" %}
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'network/posts.js' %}"></script>
+{% endblock %}

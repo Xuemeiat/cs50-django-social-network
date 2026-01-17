@@ -21,3 +21,14 @@ Social network web application built with Django and JavaScript as part of CS50 
 2. Install requirements:
    ```bash
    pip install -r requirements.txt
+
+## Screenshots
+
+### Feed
+![Feed](screenshots/feed.png)
+
+### Profile
+![Profile](screenshots/profile.png)
+
+### Following
+![Following](screenshots/following.png)
